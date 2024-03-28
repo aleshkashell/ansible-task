@@ -1,3 +1,5 @@
 ---
-- ansible.builtin.import_tasks: encrypt_drive.yml
-- ansible.builtin.import_tasks: encrypt_next_partition.yml
+- ansible.builtin.include_tasks: encrypt_drive.yml
+  when: enc_drive_name is defined
+- ansible.builtin.include_tasks: encrypt_partition.yml
+  when: enc_partition_name is defined

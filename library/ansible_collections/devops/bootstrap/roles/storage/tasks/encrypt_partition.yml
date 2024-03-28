@@ -1,0 +1,36 @@
+---
+- name: Fail if partition for encryption is not defined
+  fail:
+    msg: You need to provide partition name to encrypt in format '/dev/sdaX'
+  when: enc_partition_name is not defined or enc_partition_name is not match("/dev/.+")
+
+- name: Check '{{ enc_partition_name }}' exists
+  ansible.builtin.stat:
+    path: "{{ enc_partition_name }}"
+  register: drive_stat
+
+- name: Fail if partition does not exists
+  ansible.builtin.fail:
+    msg: Partition '{{ enc_partition_name }}' does not exists
+  when: not drive_stat.stat.exists
+
+- name: Get root partition
+  ansible.builtin.shell: findmnt --noheadings --output SOURCE --mountpoint /
+  register: root_partition
+
+- name: Fail if cannot get root partition
+  fail:
+    msg: Cannot get root partition device
+  when: root_partition.stdout == ""
+
+- name: Fail if provided partition contains root
+  fail:
+    msg: You cannot encrypt active root partition '{{ enc_partition_name }}'
+  when: root_partition.stdout == enc_partition_name
+
+- name: Encrypt partition '{{ enc_partition_name }}'
+  community.crypto.luks_device:
+    device: "{{ enc_drive_name }}"
+    state: "present"
+    passphrase: "{{ crypt_passphrase }}"
+  become: yes

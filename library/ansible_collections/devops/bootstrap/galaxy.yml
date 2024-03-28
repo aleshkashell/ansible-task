@@ -1,0 +1,10 @@
+namespace: devops
+
+name: bootstrap
+description: ""
+# The version of the collection. Must be compatible with semantic versioning
+version: 1.0.0
+dependencies:
+  "community.crypto": ">=2.18.0"
+
+repository: ""

@@ -1,19 +1,24 @@
 ---
+- name: Fail if disk for encryption is not defined
+  fail:
+    msg: You need to provide disk to encrypt in format '/dev/sda'
+  when: enc_drive_name is not defined or enc_drive_name is not match("/dev/.+")
+
+- name: Check '{{ enc_drive_name }}' exists
+  ansible.builtin.stat:
+    path: "{{ enc_drive_name }}"
+  register: drive_stat
+
+- name: Fail if drive does not exists
+  ansible.builtin.fail:
+    msg: Drive '{{ enc_drive_name }}' does not exists
+  when: not drive_stat.stat.exists
+
 - name: Install dependencies
   ansible.builtin.package:
     name: jq
     state: present
   become: yes
-
-- name: Check '{{ second_drive }}' exists
-  ansible.builtin.stat:
-    path: "{{ second_drive }}"
-  register: drive_stat
-
-- name: Fail if drive does not exists
-  ansible.builtin.fail:
-    msg: Drive '{{ second_drive }}' does not exists
-  when: not drive_stat.stat.exists
 
 - name: Find root drive
   ansible.builtin.shell: >
@@ -21,15 +26,14 @@
     jq -r '.blockdevices[] | . as $bd | .. | objects | select(.mountpoint == "/") | $bd.name'
   register: root_drive_info
 
-
 - name: Fail if this drive contains root
   ansible.builtin.fail:
-    msg: "{{ second_drive }} contains root"
-  when: '"/dev/" + root_drive_info.stdout == second_drive'
+    msg: "{{ enc_drive_name }} contains root partition"
+  when: '"/dev/" + root_drive_info.stdout == enc_drive_name'
 
 - name: Encrypt second drive
   community.crypto.luks_device:
-    device: "{{ second_drive }}"
+    device: "{{ enc_drive_name }}"
     state: "present"
     passphrase: "{{ crypt_passphrase }}"
   become: yes

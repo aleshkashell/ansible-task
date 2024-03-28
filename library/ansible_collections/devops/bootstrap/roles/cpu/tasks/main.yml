@@ -1,7 +1,7 @@
 ---
 - name: Install required dependencies
   ansible.builtin.package:
-    name: 
+    name:
       # - linux-tools-generic
       # - cpuinfo
       - cpufrequtils
@@ -29,11 +29,4 @@
   become: yes
   notify: Update grub
 
-- name: Get CPU info
-  ansible.builtin.shell: dmidecode -t processor
-  register: cpuinfo
-  become: yes
 
-- name: Show CPU info
-  debug: 
-    msg: "{{ cpuinfo.stdout_lines }}"

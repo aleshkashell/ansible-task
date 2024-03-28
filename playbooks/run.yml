@@ -4,10 +4,20 @@
   roles:
     # - role: devops.bootstrap.network
     # - role: devops.bootstrap.cpu
-    - role: devops.bootstrap.storage
+    # - role: devops.bootstrap.storage
 
 
-  # tasks:
-  #   - name: Reboot machine
-  #     ansible.builtin.reboot:
-  #     become: yes
+  tasks:
+    # # We need this to apply grub parameters
+    # - name: Reboot machine
+    #   ansible.builtin.reboot:
+    #   become: yes
+    #
+    - name: Get CPU info
+      ansible.builtin.shell: dmidecode -t processor
+      register: cpuinfo
+      become: yes
+
+    - name: Show CPU info
+      debug:
+        msg: "{{ cpuinfo.stdout_lines }}"

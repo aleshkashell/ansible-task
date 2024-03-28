@@ -1,5 +1,0 @@
----
-- hosts: localhost
-  remote_user: root
-  roles:
-    - library/ansible_collections/devops/bootstrap/storage
