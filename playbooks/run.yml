@@ -2,9 +2,9 @@
 - hosts: local_node
   gather_facts: True
   roles:
-    # - role: devops.bootstrap.network
-    # - role: devops.bootstrap.cpu
-    # - role: devops.bootstrap.storage
+    - role: devops.bootstrap.network
+    - role: devops.bootstrap.cpu
+    - role: devops.bootstrap.storage
 
 
   tasks:
@@ -20,4 +20,4 @@
 
     - name: Show CPU info
       debug:
-        msg: "{{ cpuinfo.stdout_lines }}"
+        msg: "{{ cpuinfo.stdout }}"
