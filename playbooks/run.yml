@@ -2,11 +2,12 @@
 - hosts: local_node
   gather_facts: True
   roles:
-    - role: devops.bootstrap.network
-    - role: devops.bootstrap.cpu
+    # - role: devops.bootstrap.network
+    # - role: devops.bootstrap.cpu
+    - role: devops.bootstrap.storage
 
 
-  tasks:
-    - name: Reboot machine
-      ansible.builtin.reboot:
-      become: yes
+  # tasks:
+  #   - name: Reboot machine
+  #     ansible.builtin.reboot:
+  #     become: yes
