@@ -21,4 +21,4 @@
 
 - name: Show active interface info
   debug:
-    msg: "{{ default_interface_info.stdout_lines }}"
+    msg: "{{ default_interface_info.stdout }}"

@@ -7,3 +7,4 @@ all:
     local_node:
       ansible_user: ubuntu
       ansible_host: 192.168.30.139
+      enc_drive_name: /dev/vdb
