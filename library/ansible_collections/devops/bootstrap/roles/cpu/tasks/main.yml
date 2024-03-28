@@ -1,0 +1,39 @@
+---
+- name: Install required dependencies
+  ansible.builtin.package:
+    name: 
+      # - linux-tools-generic
+      # - cpuinfo
+      - cpufrequtils
+    state: present
+  become: yes
+
+- name: Set governor to performance
+  ansible.builtin.lineinfile:
+    state: present
+    dest: /etc/default/cpufrequtils
+    regexp: '^GOVERNOR=.*'
+    line: GOVERNOR="performance"
+    create: yes
+  become: yes
+  notify: Restart cpufrequtils
+
+- name: Update grub boot options
+  ansible.builtin.lineinfile:
+    state: present
+    dest: /etc/default/grub
+    backrefs: yes
+    regexp: '^(GRUB_CMDLINE_LINUX_DEFAULT=(?!.*{{ item.split("=")[0] }})\"[^\"]*)(\".*)'
+    line: '\1 {{ item }}\2'
+  loop: '{{ grub_default_options }}'
+  become: yes
+  notify: Update grub
+
+- name: Get CPU info
+  ansible.builtin.shell: dmidecode -t processor
+  register: cpuinfo
+  become: yes
+
+- name: Show CPU info
+  debug: 
+    msg: "{{ cpuinfo.stdout_lines }}"

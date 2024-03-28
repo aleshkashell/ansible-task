@@ -1,0 +1,2 @@
+---
+mac_address: "{{ ansible_facts['default_ipv4']['macaddress'] }}"

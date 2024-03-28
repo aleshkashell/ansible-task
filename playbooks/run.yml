@@ -3,8 +3,7 @@
   gather_facts: True
   roles:
     - role: devops.bootstrap.network
-      vars:
-        mac_address: "{{ ansible_facts['default_ipv4']['macaddress'] }}"
+    - role: devops.bootstrap.cpu
 
 
   tasks:

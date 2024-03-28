@@ -1,0 +1,10 @@
+---
+- name: Restart cpufrequtils
+  ansible.builtin.service:
+    name: cpufrequtils
+    state: restarted
+  become: yes
+
+- name: Update grub
+  ansible.builtin.shell: update-grub
+  become: yes

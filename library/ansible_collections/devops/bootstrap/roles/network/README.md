@@ -1,7 +1,7 @@
 Network
 =========
 
-Network configuration for new services
+Network configuration for new servers
 
 Requirements
 ------------

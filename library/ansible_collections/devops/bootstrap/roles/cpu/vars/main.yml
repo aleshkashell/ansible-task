@@ -1,0 +1,6 @@
+---
+grub_default_options:
+  # - acpi=off
+  # - apm=off # disable automatic power management
+  # - idle=poll # disable cpuidle drivers and the default CPU idle routine 
+  - processor.max_cstate=0

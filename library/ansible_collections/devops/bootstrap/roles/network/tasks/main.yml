@@ -1,5 +1,5 @@
 ---
-- name: Check we don't have active {{ default_interface_name }} interface
+- name: Check we don't have active {{ default_interface_name }} interface with different mac address
   ansible.builtin.shell: ip a s {{ default_interface_name }} | grep link/ether | awk '{print $2}'
   register: interface_check
 
@@ -14,3 +14,11 @@
   become: yes
   notify:
     - Validate netplan configuration
+
+- name: Get active interface info
+  ansible.builtin.shell: ip a s {{ ansible_facts['default_ipv4']['interface'] }}
+  register: default_interface_info
+
+- name: Show active interface info
+  debug:
+    msg: "{{ default_interface_info.stdout_lines }}"
