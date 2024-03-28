@@ -1,0 +1,16 @@
+---
+- name: Check we don't have active {{ default_interface_name }} interface
+  ansible.builtin.shell: ip a s {{ default_interface_name }} | grep link/ether | awk '{print $2}'
+  register: interface_check
+
+- fail:
+    msg: "There already is '{{ default_interface_name }}' interface in system with different mac address: {{ interface_check.stdout }}"
+  when: interface_check.stdout != "" and interface_check.stdout != mac_address
+
+- name: Put netplan configuration
+  ansible.builtin.template:
+    src: 50-cloud-init.yaml.j2
+    dest: /etc/netplan/50-cloud-init.yaml
+  become: yes
+  notify:
+    - Validate netplan configuration

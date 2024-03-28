@@ -1,0 +1,4 @@
+---
+- name: Validate netplan configuration
+  ansible.builtin.shell: netplan try
+  become: yes
