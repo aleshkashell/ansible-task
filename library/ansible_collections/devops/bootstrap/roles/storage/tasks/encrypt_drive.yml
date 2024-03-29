@@ -18,7 +18,7 @@
   ansible.builtin.package:
     name: jq
     state: present
-  become: yes
+  become: true
 
 - name: Find root drive
   ansible.builtin.shell: >
@@ -36,5 +36,5 @@
     device: "{{ enc_drive_name }}"
     state: "present"
     passphrase: "{{ crypt_passphrase }}"
-  become: yes
+  become: true
 

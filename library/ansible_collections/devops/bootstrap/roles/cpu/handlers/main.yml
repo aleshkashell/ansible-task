@@ -3,8 +3,9 @@
   ansible.builtin.service:
     name: cpufrequtils
     state: restarted
-  become: yes
+    enabled: true
+  become: true
 
 - name: Update grub
-  ansible.builtin.shell: update-grub
-  become: yes
+  ansible.builtin.shell: grub-mkconfig -o /boot/grub/grub.cfg
+  become: true

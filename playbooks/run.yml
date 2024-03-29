@@ -1,22 +1,22 @@
 ---
-- hosts: local_node
-  gather_facts: True
+- hosts: task_node
+  gather_facts: true
   roles:
     - role: devops.bootstrap.network
     - role: devops.bootstrap.cpu
     - role: devops.bootstrap.storage
 
 
-  tasks:
-    # # We need this to apply grub parameters
-    # - name: Reboot machine
-    #   ansible.builtin.reboot:
-    #   become: yes
-    #
+  post_tasks:
+    # We need this to apply grub parameters
+    - name: Reboot machine
+      ansible.builtin.reboot:
+      become: true
+
     - name: Get CPU info
       ansible.builtin.shell: dmidecode -t processor
       register: cpuinfo
-      become: yes
+      become: true
 
     - name: Show CPU info
       debug:

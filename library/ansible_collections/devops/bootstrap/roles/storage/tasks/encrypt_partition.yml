@@ -33,4 +33,4 @@
     device: "{{ enc_drive_name }}"
     state: "present"
     passphrase: "{{ crypt_passphrase }}"
-  become: yes
+  become: true
