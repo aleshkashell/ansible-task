@@ -39,4 +39,4 @@ There is no module for `netplan`
 There is no module for `grub`
 
 We could use ansible facts to get CPU info and detect multithreading based on `processor_threads_per_core` parameter. 
-But it doesn't provide full info about CPU, so it's better to use tools which provides full info about CPUs. Plus external tools provide nice formatted output.
+But it doesn't provide full info about CPUs, so it's better to use external tools for that. Plus external tools provide nice formatted output.
