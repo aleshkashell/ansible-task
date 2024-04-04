@@ -4,3 +4,6 @@ tasks:
   run:
     cmds:
       - ansible-playbook -i inventories/task.yml playbooks/run.yml
+  run-with-tags:
+    cmds:
+      - ansible-playbook -i inventories/task.yml playbooks/run.yml --tags "untagged,show changes immediately"

@@ -31,3 +31,9 @@ task run
 Due to it's a test repo we have `vault.key` committed.
 
 `crypt_passphrase` - secret for drive/partition encryption. (Default: `some_secret`)
+
+### Shell commands
+
+There is no module for `netplan`
+
+There is no module for `grub`

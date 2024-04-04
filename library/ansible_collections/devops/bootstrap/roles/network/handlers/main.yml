@@ -1,4 +1,4 @@
 ---
-- name: Validate netplan configuration
-  ansible.builtin.shell: netplan try
+- name: Apply netplan configuration
+  ansible.builtin.shell: netplan apply
   become: true
