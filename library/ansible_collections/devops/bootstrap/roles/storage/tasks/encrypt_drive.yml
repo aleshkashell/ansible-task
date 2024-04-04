@@ -1,6 +1,6 @@
 ---
 - name: Fail if disk for encryption is not defined
-  fail:
+  ansible.builtin.fail:
     msg: You need to provide disk to encrypt in format '/dev/sda'
   when: enc_drive_name is not defined or enc_drive_name is not match("/dev/.+")
 
@@ -14,22 +14,23 @@
     msg: Drive '{{ enc_drive_name }}' does not exists
   when: not drive_stat.stat.exists
 
-- name: Install dependencies
-  ansible.builtin.package:
-    name: jq
-    state: present
-  become: true
+- name: Get root partition
+  ansible.builtin.set_fact:
+    root_partition: "{{ ansible_device_links['uuids']|dict2items|json_query(_query) }}"
+  vars:
+    root_device_uuid: "{{ ansible_mounts|json_query('[?mount == `/`].uuid | [0]') }}"
+    _query: '[?contains(value, `{{ root_device_uuid }}`)].key | [0]'
 
-- name: Find root drive
-  ansible.builtin.shell: >
-    lsblk -oNAME,MOUNTPOINT -J | 
-    jq -r '.blockdevices[] | . as $bd | .. | objects | select(.mountpoint == "/") | $bd.name'
-  register: root_drive_info
-
-- name: Fail if this drive contains root
+- name: Fail if cannot get root partition info
   ansible.builtin.fail:
-    msg: "{{ enc_drive_name }} contains root partition"
-  when: '"/dev/" + root_drive_info.stdout == enc_drive_name'
+    msg: Cannot get root partition device
+  when: root_partition == ""
+
+- name: Fail if root partition is located on provided disk
+  fail:
+    msg: "{{ partition_prefix }}{{ item }} contains root"
+  with_items: "{{ ansible_devices[enc_drive_name | replace(partition_prefix, '')]['partitions'] }}"
+  when: item == root_partition
 
 - name: Encrypt second drive
   community.crypto.luks_device:
