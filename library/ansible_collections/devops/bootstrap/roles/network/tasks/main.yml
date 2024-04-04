@@ -1,6 +1,6 @@
 ---
 - name: Fail if distribution is not supported
-  fail:
+  ansible.builtin.fail:
     msg: "Distribution '{{ ansible_distribution }}' is not supported. Supported distributions: {{ supported_distributions }}"
   when: ansible_distribution is not in supported_distributions
 
@@ -8,7 +8,8 @@
   debug:
     msg: "{{ ansible_facts['default_ipv4'] }}"
 
-- fail:
+- name: Fail if interface '{{ default_interface_name }}' with different macaddress already exists
+  ansible.builtin.fail:
     msg: "There already is '{{ default_interface_name }}' interface in system with different mac address: {{ ansible_facts[default_interface_name]['macaddress']|default('') }}"
   when:
     - ansible_facts[default_interface_name]['macaddress']|default('') != mac_address
