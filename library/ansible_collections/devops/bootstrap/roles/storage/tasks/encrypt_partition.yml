@@ -16,7 +16,7 @@
 
 - name: Get root partition
   ansible.builtin.set_fact:
-    root_partition: "{{ partition_prefix }}{{ ansible_device_links['uuids']|dict2items|json_query(_query) }}"
+    root_partition: "{{ ansible_device_links['uuids']|dict2items|json_query(_query) }}"
   vars:
     root_device_uuid: "{{ ansible_mounts|json_query('[?mount == `/`].uuid | [0]') }}"
     _query: '[?contains(value, `{{ root_device_uuid }}`)].key | [0]'
@@ -24,12 +24,12 @@
 - name: Fail if cannot get root partition info
   ansible.builtin.fail:
     msg: Cannot get root partition device
-  when: root_partition == partition_prefix
+  when: root_partition == ""
 
 - name: Fail if provided partition contains root
   ansible.builtin.fail:
     msg: You cannot encrypt active root partition '{{ enc_partition_name }}'
-  when: root_partition == enc_partition_name
+  when: partition_prefix + root_partition == enc_partition_name
 
 - name: Encrypt partition '{{ enc_partition_name }}'
   community.crypto.luks_device:
